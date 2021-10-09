@@ -55,6 +55,20 @@ void Shader::init(const std::string& vertFile, const std::string& fragFile, cons
 	uniforms[TRANSFORM_U] = glGetUniformLocation(shaderProgram, "transform"); // associate with the location of uniform variable within a program
 }
 
+void Shader::render(glm::vec2 resolution, float time, glm::vec3 cameraPos)
+{
+	glGenVertexArrays(1, &vertexArrayObject);
+	glGenBuffers(1, &vertexBufferObject);
+	glBindVertexArray(vertexArrayObject);
+	glUseProgram(shaderProgram);
+
+	glBindBuffer(GL_ARRAY_BUFFER, vertexBufferObject);
+
+	glDrawArrays(GL_TRIANGLES, 0, 6);
+
+	glBindVertexArray(0);
+}
+
 Shader::~Shader()
 {
 	for (unsigned int i = 0; i < NUM_SHADERS; i++)

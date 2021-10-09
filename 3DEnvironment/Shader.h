@@ -14,6 +14,7 @@ public:
 	void Update(const Transform& transform, const Camera& camera);
 	void init(const std::string& vertFile, const std::string& fragFile);
 	void init(const std::string& vertFile, const std::string& fragFile,const std::string& geometryFile);
+	void render(glm::vec2 resolution, float time, glm::vec3 cameraPos);
 
 	std::string LoadShader(const std::string& fileName);
 	void CheckShaderError(GLuint shader, GLuint flag, bool isProgram, const std::string& errorMessage);
@@ -158,6 +159,11 @@ private:
 		TRANSFORM_U,
 		NUM_UNIFORMS
 	};
+
+	
+	GLuint vertexArrayObject;
+	GLuint vertexBufferObject;
+
 	GLuint shaderProgram; // Track the shader program
 	GLuint shaders[NUM_SHADERS]; //array of shaders
 	GLuint uniforms[NUM_UNIFORMS]; //no of uniform variables

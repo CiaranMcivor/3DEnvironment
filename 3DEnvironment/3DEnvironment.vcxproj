@@ -148,6 +148,7 @@
   <ItemGroup>
     <ClCompile Include="Audio.cpp" />
     <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="Cube.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="main.cpp" />
@@ -163,6 +164,7 @@
   <ItemGroup>
     <ClInclude Include="Audio.h" />
     <ClInclude Include="Camera.h" />
+    <ClInclude Include="Cube.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="Mesh.h" />
@@ -180,6 +182,8 @@
     <None Include="..\res\geometryShader.frag" />
     <None Include="..\res\geometryShader.geom" />
     <None Include="..\res\geometryShader.vert" />
+    <None Include="..\res\phongShader.frag" />
+    <None Include="..\res\phongShader.vert" />
     <None Include="..\res\rimShader.frag" />
     <None Include="..\res\rimShader.vert" />
     <None Include="..\res\shader.frag" />
@@ -188,12 +192,17 @@
     <None Include="..\res\shaderReflection.vert" />
     <None Include="..\res\shaderSkybox.frag" />
     <None Include="..\res\shaderSkybox.vert" />
+    <None Include="..\res\thirdShader.frag" />
+    <None Include="..\res\thirdShader.vert" />
     <None Include="..\res\toonShader.frag" />
     <None Include="..\res\toonShader.vert" />
     <None Include="ClassDiagram.cd" />
     <None Include="ClassDiagram1.cd" />
   </ItemGroup>
   <ItemGroup>
+    <Object Include="..\res\cube.obj">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </Object>
     <Object Include="..\res\monkey3.obj">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
     </Object>

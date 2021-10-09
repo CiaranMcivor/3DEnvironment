@@ -60,7 +60,7 @@ void GameObject::draw()
 
 void GameObject::draw(unsigned int texID)
 {
-	glActiveTexture(GL_TEXTURE0);
+	glActiveTexture(GL_TEXTURE2);
 	glBindTexture(GL_TEXTURE_CUBE_MAP, texID);
 	mesh.draw();
 }
@@ -69,7 +69,7 @@ void GameObject::update()
 {
 	move();
 	mesh.updateCollisionData(getPosition());			//set the position of the Collision sphere to be the same as the position of the transform
-	euclideanTorus();
+	//euclideanTorus();
 	std::cout << this->getPosition().y << std::endl;
 }
 

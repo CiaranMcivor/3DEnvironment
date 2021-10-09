@@ -2,7 +2,8 @@
 
 #include <glm/glm.hpp>
 #include <glm/gtx/transform.hpp>
-
+#include "GameObject.h"
+#include <iostream>
 
 struct Camera
 {
@@ -11,6 +12,11 @@ public:
 	Camera()
 	{
 	}
+
+	void setViewtarget(GameObject* target) {
+		viewTarget = target;
+		std::cout << viewTarget;
+	};
 
 	glm::vec3 getPos()
 	{
@@ -49,10 +55,11 @@ public:
 
 	void Pitch(float angle);
 
+	void lookAt();
 
 	void RotateY(float angle);
 
-	void handleInput();
+	void update();
 
 protected:
 private:
@@ -60,5 +67,6 @@ private:
 	glm::vec3 pos;
 	glm::vec3 forward;
 	glm::vec3 up;
+	GameObject *viewTarget;
 };
 

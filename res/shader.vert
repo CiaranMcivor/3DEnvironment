@@ -1,18 +1,8 @@
-#version 120
+#version 330 core
 
-attribute vec3 position;
-attribute vec2 texCoord;
-attribute vec3 normals;
-
-
-varying vec2 texCoord0;
-varying vec3 normalsPass;
-
-uniform mat4 transform;
+const vec2 quad_vertices[4] = vec2[4]( vec2( -1.0, -1.0), vec2( 1.0, -1.0), vec2( -1.0, 1.0), vec2( 1.0, 1.0));
 
 void main()
 {
-	gl_Position = transform * vec4(position*5.0f, 1.0); //transform contains MVP
-	texCoord0 = texCoord;
-	normalsPass = normals;
+    gl_Position = vec4(quad_vertices[gl_VertexID], 0.0, 1.0);
 }

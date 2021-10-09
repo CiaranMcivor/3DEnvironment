@@ -54,6 +54,9 @@
     <ClCompile Include="SkyBox.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Cube.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game.h">
@@ -90,6 +93,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="SkyBox.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Cube.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -141,12 +147,27 @@
     <None Include="..\res\shaderSkybox.vert">
       <Filter>Resource Files</Filter>
     </None>
+    <None Include="..\res\thirdShader.vert">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\res\thirdShader.frag">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\res\phongShader.vert">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\res\phongShader.frag">
+      <Filter>Resource Files</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Object Include="..\res\Zuccarello.obj">
       <Filter>Resource Files</Filter>
     </Object>
     <Object Include="..\res\monkey3.obj">
+      <Filter>Resource Files</Filter>
+    </Object>
+    <Object Include="..\res\cube.obj">
       <Filter>Resource Files</Filter>
     </Object>
   </ItemGroup>

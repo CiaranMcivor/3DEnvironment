@@ -20,6 +20,11 @@ void Camera::Pitch(float angle)
 	up = glm::normalize(glm::cross(forward, right));
 }
 
+void Camera::lookAt()
+{
+	forward = glm::normalize(viewTarget->getPosition() - pos);
+}
+
 void Camera::RotateY(float angle)
 {
 	static const glm::vec3 UP(0.0f, 1.0f, 0.0f);
@@ -30,7 +35,7 @@ void Camera::RotateY(float angle)
 	up = glm::vec3(glm::normalize(rotation * glm::vec4(up, 0.0)));
 }
 
-void Camera::handleInput()
+void Camera::update()
 {
-
+	lookAt();
 }

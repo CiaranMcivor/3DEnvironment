@@ -8,6 +8,7 @@
 #include "Transform.h"
 #include "GameObject.h"
 #include "Audio.h"
+#include "Cube.h"
 #include "SkyBox.h"
 #include <vector>
 enum class GameState { PLAY, EXIT };
@@ -34,6 +35,8 @@ private:
 	void linkRimShader();
 	void linkGeometryShader();
 	void linkEnvMapping(Transform object);
+	void linksThirdShader(Transform model);
+	void runThirdShader();
 
 	Window gameWindow;
 	GameState gameState;
@@ -49,12 +52,19 @@ private:
 	Shader rimShader;
 	Shader geometryShader;
 	Shader environmentMapping;
+	Shader thirdShader;
+	Shader raymarchShader;
 	Audio audio;
 	Skybox skybox;
 	Mesh mesh;
 	unsigned int bang;
 	unsigned int music;
 	float counter;
+	GLuint shader1;
+	GLuint vao;
+	GLuint vbo;
+	Cube cube;
 
+	float vertices[];
 };
 

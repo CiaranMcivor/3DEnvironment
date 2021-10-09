@@ -27,18 +27,21 @@ void Game::init()
 	/* Initialize each game object, set the object to be loaded, texture, collision position and radius*/
 
 	gameObject.init("..\\res\\monkey3.obj", "..\\res\\bricks.jpg", *gameObject.getTransform().GetPos(), 2.0f);
-	gameObject.setPosition(glm::vec3{ 0,0,0 });
+	gameObject.setPosition(glm::vec3{ 0,0,-15 });
 	gameObject2.init("..\\res\\cube.obj", *gameObject2.getTransform().GetPos(), 2.0f);
-	gameObject2.setPosition(glm::vec3{0,0,-20 });
+	gameObject2.setPosition(glm::vec3{-10,0,-15});
 	gameObject2.setRotation(0);
-
-
+	gameObject3.init("..\\res\\sphere.obj", *gameObject2.getTransform().GetPos(), 2.0f);
+	gameObject3.setPosition(glm::vec3{ 10,0,-15 });
+	camera.setViewtarget(&gameObject);
 
 	/*load all required audio files*/
 	bang = audio.loadSound("..\\res\\bang.wav");
 	music = audio.loadSound("..\\res\\background.wav");
 	/*Shaders*/
 	//shader.init("..\\res\\shader"); 
+	raymarchShader.init("..\\res\\thirdShader.vert", "..\\res\\thirdShader.frag");
+	thirdShader.init("..\\res\\phongShader.vert", "..\\res\\phongShader.frag");
 	fogShader.init("..\\res\\fogShader.vert", "..\\res\\fogShader.frag");
 	toonShader.init("..\\res\\toonShader.vert", "..\\res\\toonShader.frag");
 	rimShader.init("..\\res\\rimShader.vert", "..\\res\\rimShader.frag");
@@ -58,9 +61,10 @@ void Game::init()
 
 	skybox.init(faces);
 
+
 	/*Initialize the camera, taking position in world, fov,width,height and culling distances*/
 	camera.initCamera(glm::vec3(0, 0, -30), 70.0f, (float)gameWindow.getWidth() / gameWindow.getHeight(), 0.01f, 1000.0f);
-
+	
 	counter = 1.0f;
 }
 
@@ -81,15 +85,15 @@ void Game::handleInput()
 		case SDL_KEYDOWN:
 			switch (event.key.keysym.sym) {
 				/* All inputs get the current position of the object, its transform vector, and adds a new vector to the value of the relevant axis. */
-			case SDLK_w:
-				camera.RotateY(10.0f);
+			case SDLK_1:
+				camera.setViewtarget(&gameObject);
 				break;
 
-			case SDLK_s:
-				gameObject.setVelocity(glm::vec3{ 0,-0.1,0 });
+			case SDLK_2:
+				camera.setViewtarget(&gameObject2);
 				break;
-			case SDLK_a:
-				gameObject.setVelocity(glm::vec3{ 0.1,0,0 });
+			case SDLK_3:
+				camera.setViewtarget(&gameObject3);
 				break;
 
 			case SDLK_d:
@@ -145,7 +149,6 @@ void Game::linkFogShader()
 	fogShader.setFloat("maxDist", 40.0f);
 
 	fogShader.setVec3("fogColor", glm::vec3(0.0f, 0.0f, 0.0f));
-
 }
 
 void Game::linkToonShader() 
@@ -177,11 +180,40 @@ void Game::linkGeometryShader()
 }
 void Game::linkEnvMapping(Transform object)
 {
-	//environmentMapping.setInt("skybox", 0);
+	environmentMapping.setInt("skybox", 0);
 	environmentMapping.setMat4("projection", camera.getProjection());
 	environmentMapping.setMat4("view", camera.getView());
 	environmentMapping.setMat4("model", object.GetModel());
 	environmentMapping.setVec3("cameraPos", camera.getPos());
+}
+void Game::linksThirdShader(Transform object)
+{
+	thirdShader.setMat4("projection", camera.getProjection());
+	thirdShader.setMat4("view", camera.getView());
+	thirdShader.setMat4("model", object.GetModel());
+	thirdShader.setVec3("lightPosition", gameObject.getPosition());		// Set light position, can be any vec3 coordinats
+	thirdShader.setVec3("lightColour", 1.0f, 1.0f, 1.0f);				// Light colour is RGB values
+	thirdShader.setVec3("modelColour", 1.0f, 1.0f, 0.31f);				//Model colour is RGB values
+	thirdShader.setVec3("cameraPosition", camera.getPos());				
+
+}
+void Game::runThirdShader()
+{
+	glDisable(GL_DEPTH_TEST);
+
+	raymarchShader.Bind();
+	raymarchShader.setFloat("time", counter * 2);
+	raymarchShader.setVec2("resolution", glm::vec2(gameWindow.getWidth(), gameWindow.getHeight()));
+	raymarchShader.setVec3("camera", camera.getPos());
+	thirdShader.setVec3("lightColour", 1.0f, 1.0f, 1.0f);
+
+	glEnableClientState(GL_COLOR_ARRAY);
+	glBegin(GL_QUADS);
+	glVertex3f(1, -1.0f, 0);
+	glVertex3f(1, 1, -1);
+	glVertex3f(-1.0f, 1, 0);
+	glVertex3f(-1.0f, -1, 0);
+
 }
 void Game::update()
 {
@@ -189,10 +221,13 @@ void Game::update()
 	/*Check for collision between two objects using their collision spheres*/
 	//hasCollided(gameObject,gameObject2);
 	//hasCollided(gameObject2, gameObject3);
+	camera.update();
 	gameObject.update();
 	gameObject.setRotation(counter);
-	gameObject2.setRotation(counter);
+	gameObject2.setRotation(counter/2);
 	gameObject2.update();
+
+
 
 }
 
@@ -226,30 +261,34 @@ void Game::gameLoop()
 	}
 }
 
+
 void Game::draw()
 {
 	// Clear the widows colours.
-	gameWindow.clear(0.8f, 0.8f, 0.8f, 1.0f); //sets our background colour
+	gameWindow.clear(0.0f, 0.0f, 0.0f, 1.0f); //sets our background colour
 
 
-	environmentMapping.Bind();
-	linkEnvMapping(gameObject2.getTransform());
-	environmentMapping.Update(gameObject2.getTransform(), camera);
-	gameObject2.draw(skybox.textureID);
-
-
-
-	//linkToonShader();
-	//toonShader.Bind();
-	//toonShader.Update(gameObject2.getTransform(),camera);
-	//gameObject2.draw();
 
 	geometryShader.Bind();
 	linkGeometryShader();
 	geometryShader.Update(gameObject.getTransform(), camera);
 	gameObject.draw();
 
+	environmentMapping.Bind();
+	linkEnvMapping(gameObject2.getTransform());
+	environmentMapping.Update(gameObject2.getTransform(), camera);
+	gameObject2.draw();
+
+	thirdShader.Bind();
+	linksThirdShader(gameObject3.getTransform());
+	thirdShader.Update(gameObject3.getTransform(), camera);
+	gameObject3.draw();
+
+	//Uncomment for raymarched sphere with phong shading, could only get the shader to run on a fullscreen plane and it will render over eveything.
+	//runThirdShader();
+
 	skybox.draw(&camera);
+
 
 	glEnableClientState(GL_COLOR_ARRAY);
 	glEnd();

@@ -1,11 +1,21 @@
-#version 120
+#version 330 core
 
-varying vec2 texCoord0;
-varying vec3 normalsPass;
+    out vec4 FragColor;
 
-uniform sampler2D diffuse;
 
-void main()
-{
-	gl_FragColor = texture2D(diffuse, texCoord0);
+uniform vec2 resolution;
+
+float circle(in vec2 _st, in float _radius){
+    vec2 dist = _st-vec2(0.5);
+	return 1.-smoothstep(_radius-(_radius*0.01),
+                         _radius+(_radius*0.01),
+                         dot(dist,dist)*4.0);
+}
+
+void main(){
+
+
+	vec3 color = vec3(1,1,1);
+
+	FragColor = vec4( color, 1.0 );
 }
