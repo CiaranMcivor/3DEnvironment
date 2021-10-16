@@ -7,9 +7,14 @@ void Camera::MoveForward(float amt)
 	this->pos += forward * amt;
 }
 
-void Camera::MoveRight(float amt)
+void Camera::MoveHorizontal(float amt)
 {
 	this -> pos += glm::cross(up, forward) * amt;
+}
+
+void Camera::MoveVertical(float amt)
+{
+	this->pos += up * amt;
 }
 
 void Camera::Pitch(float angle)

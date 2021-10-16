@@ -5,6 +5,7 @@
 #include "Mesh.h"
 using namespace std;
 
+
 class GameObject
 {
 private:
@@ -39,6 +40,6 @@ public:
 	void draw();
 	void draw(unsigned int texID);
 	void update();
-	void euclideanTorus();
+	void screenWrap();
 };
 

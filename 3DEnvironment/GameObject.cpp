@@ -69,13 +69,11 @@ void GameObject::update()
 {
 	move();
 	mesh.updateCollisionData(getPosition());			//set the position of the Collision sphere to be the same as the position of the transform
-	//euclideanTorus();
-	std::cout << this->getPosition().y << std::endl;
 }
 
 /*Wraps objecs around the screen when they exit the edges*/
 
-void GameObject::euclideanTorus()
+void GameObject::screenWrap()
 {
 	if (transform.GetPos()->x > 30) {
 		transform.SetPos(glm::vec3{ -25,this->getPosition().y,this->getPosition().z });

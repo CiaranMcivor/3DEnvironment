@@ -10,8 +10,20 @@
 #include "Audio.h"
 #include "Cube.h"
 #include "SkyBox.h"
+#include "Linker.h"
+#include "Time.h"
 #include <vector>
+#include <array>
 enum class GameState { PLAY, EXIT };
+
+
+struct ShaderData {
+
+	GameObject gameObject;
+	Shader shader;
+	enum ShaderType linkerType;
+};
+
 
 class Game
 {
@@ -30,22 +42,14 @@ private:
 	void playAudio(unsigned int Source, glm::vec3 pos);
 	void update();
 	bool hasCollided(GameObject& object1, GameObject& object2);
-	void linkFogShader();
-	void linkToonShader();
-	void linkRimShader();
-	void linkGeometryShader();
-	void linkEnvMapping(Transform object);
-	void linksThirdShader(Transform model);
 	void runThirdShader();
-
+	std::vector<ShaderData> renderData;
 	Window gameWindow;
 	GameState gameState;
-	GameObject gameObject;
-	GameObject gameObject2;
-	GameObject gameObject3;
-	GameObject gameObject4;
+
 	Camera camera;
 	Texture texture;
+	Linker linker;
 	Shader shader;
 	Shader fogShader;
 	Shader toonShader;
@@ -54,9 +58,11 @@ private:
 	Shader environmentMapping;
 	Shader thirdShader;
 	Shader raymarchShader;
+	Shader shaders[3];
 	Audio audio;
 	Skybox skybox;
 	Mesh mesh;
+	Time deltaTime;
 	unsigned int bang;
 	unsigned int music;
 	float counter;
@@ -66,5 +72,7 @@ private:
 	Cube cube;
 
 	float vertices[];
+
+
 };
 

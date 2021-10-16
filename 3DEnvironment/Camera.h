@@ -5,6 +5,7 @@
 #include "GameObject.h"
 #include <iostream>
 
+#define print(x) std::cout << x << std::endl
 struct Camera
 {
 public:
@@ -15,7 +16,7 @@ public:
 
 	void setViewtarget(GameObject* target) {
 		viewTarget = target;
-		std::cout << viewTarget;
+		print(viewTarget);
 	};
 
 	glm::vec3 getPos()
@@ -50,7 +51,9 @@ public:
 	void MoveForward(float amt);
 
 
-	void MoveRight(float amt);
+	void MoveHorizontal(float amt);
+
+	void MoveVertical(float amt);
 
 
 	void Pitch(float angle);
