@@ -224,6 +224,9 @@
     <Image Include="..\res\bricks.jpg" />
     <Image Include="..\res\Water.jpg" />
   </ItemGroup>
+  <ItemGroup>
+    <Text Include="ModelPath.txt" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

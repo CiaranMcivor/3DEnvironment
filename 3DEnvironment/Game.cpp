@@ -19,6 +19,7 @@ void Game::run()
 	gameLoop();
 }
 
+
 void Game::init()
 {
 	/*Initialize window*/
@@ -30,15 +31,53 @@ void Game::init()
 	{
 		renderData.push_back(ShaderData());
 	}
+	for (size_t i = 0; i < gameObjNum; i++)
+	{
+		mesh.push_back(Mesh());
+	}
 
-	renderData[0].gameObject.init("..\\res\\monkey3.obj", "..\\res\\bricks.jpg", *renderData[0].gameObject.getTransform().GetPos(), 2.0f);
-	renderData[0].gameObject.setPosition(glm::vec3{ 0,0,-15 });
-	renderData[1].gameObject.init("..\\res\\cube.obj", *renderData[1].gameObject.getTransform().GetPos(), 2.0f);
-	renderData[1].gameObject.setPosition(glm::vec3{-10,0,-15});
-	renderData[1].gameObject.setRotation(0);
-	renderData[2].gameObject.init("..\\res\\sphere.obj", *renderData[2].gameObject.getTransform().GetPos(), 2.0f);
-	renderData[2].gameObject.setPosition(glm::vec3{ 10,0,-15 });
-	camera.setViewtarget(&renderData[0].gameObject);
+	for (size_t i = 0; i < gameObjNum; i++)
+	{
+		gameObject.push_back(GameObject());
+	}
+	std::ifstream modelPaths("ModelPath.txt");
+	std::string path;
+
+	
+
+	for (int i = 0; i < 3; i++) {
+		std::getline(modelPaths, path);
+		mesh[i].loadModel(path);
+		//str.push_back('\n');
+		std::cout << path;
+	}
+
+
+
+
+	//mesh[0].loadModel("..\\res\\monkey3.obj");
+	//mesh[1].loadModel("..\\res\\cube.obj");
+	//mesh[2].loadModel("..\\res\\sphere.obj");
+	//renderData[0].gameObject.init(&mesh[0], "..\\res\\bricks.jpg", *renderData[0].gameObject.getTransform().GetPos(), 2.0f);
+	//renderData[0].gameObject.setPosition(glm::vec3{ 0,0,-15 });
+	//renderData[1].gameObject.init(&mesh[1], *renderData[1].gameObject.getTransform().GetPos(), 2.0f);
+	//renderData[1].gameObject.setPosition(glm::vec3{-10,0,-15});
+	//renderData[1].gameObject.setRotation(0);
+	//renderData[2].gameObject.init(&mesh[2], *renderData[2].gameObject.getTransform().GetPos(), 2.0f);
+	//renderData[2].gameObject.setPosition(glm::vec3{ 10,0,-15 });
+	gameObject[0].init(&mesh[0], "..\\res\\bricks.jpg", *gameObject[0].getTransform().GetPos(), 2.0f);
+	gameObject[0].setPosition(glm::vec3{ 0,0,-15 });
+	gameObject[1].init(&mesh[1], *gameObject[1].getTransform().GetPos(), 2.0f);
+	gameObject[1].setPosition(glm::vec3{ -10,0,-15 });
+	gameObject[1].setRotation(0);
+	gameObject[2].init(&mesh[2], *gameObject[2].getTransform().GetPos(), 2.0f);
+	gameObject[2].setPosition(glm::vec3{ 10,0,-15 });
+
+	for (int i = 0; i < gameObject.size(); i++) {
+		renderData[i].gameObject = &gameObject[i];
+	}
+
+	camera.setViewtarget(&gameObject[0]);
 
 	/*load all required audio files*/
 	bang = audio.loadSound("..\\res\\bang.wav");
@@ -47,12 +86,14 @@ void Game::init()
 	//shader.init("..\\res\\shader"); 
 	raymarchShader.init("..\\res\\thirdShader.vert", "..\\res\\thirdShader.frag");
 	thirdShader.init("..\\res\\phongShader.vert", "..\\res\\phongShader.frag");
-	renderData[2].shader.init("..\\res\\phongShader.vert", "..\\res\\phongShader.frag");
-	renderData[1].shader.init("..\\res\\shaderReflection.vert", "..\\res\\shaderReflection.frag");
-	renderData[0].shader.init("..\\res\\geometryShader.vert", "..\\res\\geometryShader.frag", "..\\res\\geometryShader.geom");
+
 	renderData[2].linkerType = ShaderType::PHONG;
 	renderData[1].linkerType = ShaderType::ENVMAPPING;
-	renderData[0].linkerType = ShaderType::GEOMETRY;
+	renderData[0].linkerType = ShaderType::ENVMAPPING;
+
+	for (int i = 0; i < renderData.size(); i++) {
+		linker.init(&renderData[i].shader, renderData[i].linkerType);
+	}
 	fogShader.init("..\\res\\fogShader.vert", "..\\res\\fogShader.frag");
 	toonShader.init("..\\res\\toonShader.vert", "..\\res\\toonShader.frag");
 	rimShader.init("..\\res\\rimShader.vert", "..\\res\\rimShader.frag");
@@ -101,14 +142,14 @@ void Game::handleInput()
 			switch (event.key.keysym.sym) {
 				/* All inputs get the current position of the object, its transform vector, and adds a new vector to the value of the relevant axis. */
 			case SDLK_1:
-				camera.setViewtarget(&renderData[0].gameObject);
+				camera.setViewtarget(&gameObject[0]);
 				break;
 
 			case SDLK_2:
-				camera.setViewtarget(&renderData[1].gameObject);
+				camera.setViewtarget(&gameObject[1]);
 				break;
 			case SDLK_3:
-				camera.setViewtarget(&renderData[2].gameObject);
+				camera.setViewtarget(&gameObject[2]);
 				break;
 
 			//case SDLK_d:
@@ -165,10 +206,10 @@ void Game::update()
 	//hasCollided(gameObject,gameObject2);
 	//hasCollided(gameObject2, gameObject3);
 	camera.update();
-	renderData[0].gameObject.update();
-	renderData[0].gameObject.setRotation(counter);
-	renderData[1].gameObject.setRotation(counter/2);
-	renderData[1].gameObject.update();
+	gameObject[0].update();
+	gameObject[0].setRotation(counter);
+	gameObject[1].setRotation(counter/2);
+	gameObject[1].update();
 
 
 
@@ -231,9 +272,9 @@ void Game::draw()
 	for (int i = 0; i < 3; i++) 
 	{
 		renderData[i].shader.Bind();
-		linker.linkShader(&renderData[i].shader, &renderData[i].gameObject, &camera, &counter, renderData[i].linkerType);
-		renderData[i].shader.Update(renderData[i].gameObject.getTransform(), camera);
-		renderData[i].gameObject.draw();
+		linker.linkShader(&renderData[i].shader, renderData[i].gameObject, &camera, &counter, renderData[i].linkerType);
+		renderData[i].shader.Update(renderData[i].gameObject->getTransform(), camera);
+		renderData[i].gameObject->draw();
 	}
 
 	//geometryShader.Bind();

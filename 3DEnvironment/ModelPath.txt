@@ -1,0 +1,3 @@
+..\\res\\monkey3.obj
+..\\res\\cube.obj
+..\\res\\sphere.obj

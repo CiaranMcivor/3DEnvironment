@@ -31,22 +31,22 @@ void GameObject::setRotation(float angle)
 }
 
 
-void GameObject::init(const std::string &meshPath, const std::string &texturePath, glm::vec3 collisionPos, float collisionRadius)
+void GameObject::init(Mesh* meshType, const std::string &texturePath, glm::vec3 collisionPos, float collisionRadius)
 {
 	/*Initialise collisions , model and texture for this object*/
-	mesh.loadModel(meshPath);
-	mesh.initCollisionData(collisionPos,collisionRadius);													//initialise the collision data for this object
+	mesh = meshType;
+	mesh->initCollisionData(collisionPos,collisionRadius);													//initialise the collision data for this object
 	texture.init(texturePath);
 
 	//shader.init("..\\res\\shader"); //new shader
 	
 }
 
-void GameObject::init(const std::string& meshPath, glm::vec3 collisionPos, float collisionRadius)
+void GameObject::init(Mesh* meshType, glm::vec3 collisionPos, float collisionRadius)
 {
 	/*Initialise collisions , model and texture for this object*/
-	mesh.loadModel(meshPath);
-	mesh.initCollisionData(collisionPos, collisionRadius);													//initialise the collision data for this object
+	mesh = meshType;
+	mesh->initCollisionData(collisionPos, collisionRadius);													//initialise the collision data for this object
 
 	//shader.init("..\\res\\shader"); //new shader
 
@@ -55,20 +55,20 @@ void GameObject::init(const std::string& meshPath, glm::vec3 collisionPos, float
 void GameObject::draw()
 {
 	texture.Bind(0);
-	mesh.draw();
+	mesh->draw();
 }
 
 void GameObject::draw(unsigned int texID)
 {
 	glActiveTexture(GL_TEXTURE2);
 	glBindTexture(GL_TEXTURE_CUBE_MAP, texID);
-	mesh.draw();
+	mesh->draw();
 }
 
 void GameObject::update()
 {
 	move();
-	mesh.updateCollisionData(getPosition());			//set the position of the Collision sphere to be the same as the position of the transform
+	mesh->updateCollisionData(getPosition());			//set the position of the Collision sphere to be the same as the position of the transform
 }
 
 /*Wraps objecs around the screen when they exit the edges*/

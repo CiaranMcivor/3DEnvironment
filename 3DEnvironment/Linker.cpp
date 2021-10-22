@@ -1,5 +1,24 @@
 #include "Linker.h"
 
+void Linker::init(Shader* shader, ShaderType shaderType)
+{
+	switch (shaderType)
+	{
+	case ShaderType::PHONG:
+		shader->init("..\\res\\phongShader.vert", "..\\res\\phongShader.frag");
+		break;
+
+	case  ShaderType::ENVMAPPING:
+		shader->init("..\\res\\shaderReflection.vert", "..\\res\\shaderReflection.frag");
+		break;
+
+	case ShaderType::GEOMETRY:
+		shader->init("..\\res\\geometryShader.vert", "..\\res\\geometryShader.frag", "..\\res\\geometryShader.geom");
+		break;
+
+	}
+}
+
 void Linker::linkShader(Shader* shader, GameObject* object, Camera* camera,float* counter, enum class ShaderType shaderType)
 {
 	

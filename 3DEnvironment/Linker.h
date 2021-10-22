@@ -14,6 +14,7 @@ class Linker
 {
 
 public:
+	void init(Shader* shader, enum ShaderType shaderType);
 	void linkShader(Shader* shader, GameObject* object, Camera* camera,float* counter, enum ShaderType shaderType);
 
 	void linkEnvMapping(Shader* shader, GameObject* object, Camera* camera);

@@ -13,13 +13,13 @@
 #include "Linker.h"
 #include "Time.h"
 #include <vector>
-#include <array>
+#include <thread>
 enum class GameState { PLAY, EXIT };
 
 
 struct ShaderData {
 
-	GameObject gameObject;
+	GameObject* gameObject;
 	Shader shader;
 	enum ShaderType linkerType;
 };
@@ -43,7 +43,13 @@ private:
 	void update();
 	bool hasCollided(GameObject& object1, GameObject& object2);
 	void runThirdShader();
+
+
+
 	std::vector<ShaderData> renderData;
+	std::vector<Mesh> mesh;
+	std::vector<GameObject> gameObject;
+
 	Window gameWindow;
 	GameState gameState;
 
@@ -61,7 +67,7 @@ private:
 	Shader shaders[3];
 	Audio audio;
 	Skybox skybox;
-	Mesh mesh;
+
 	Time deltaTime;
 	unsigned int bang;
 	unsigned int music;
