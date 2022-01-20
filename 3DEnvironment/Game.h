@@ -12,6 +12,8 @@
 #include "SkyBox.h"
 #include "Linker.h"
 #include "Time.h"
+#include "FBO.h"
+#include "GBuffer.h"
 #include <vector>
 #include <thread>
 enum class GameState { PLAY, EXIT };
@@ -45,13 +47,17 @@ private:
 	void runThirdShader();
 
 
-
+	glm::vec3 cameraPosition;
 	std::vector<ShaderData> renderData;
 	std::vector<Mesh> mesh;
-	std::vector<GameObject> gameObject;
+	GameObject gameObject[3];
+	GameObject gameObject1;
 
 	Window gameWindow;
 	GameState gameState;
+
+	FBO fbo;
+	GBuffer gBuffer;
 
 	Camera camera;
 	Texture texture;
@@ -65,6 +71,7 @@ private:
 	Shader thirdShader;
 	Shader raymarchShader;
 	Shader shaders[3];
+	Shader gBufferShader;
 	Audio audio;
 	Skybox skybox;
 
@@ -75,6 +82,7 @@ private:
 	GLuint shader1;
 	GLuint vao;
 	GLuint vbo;
+
 	Cube cube;
 
 	float vertices[];

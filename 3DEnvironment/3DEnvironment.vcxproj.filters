@@ -63,6 +63,12 @@
     <ClCompile Include="Time.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="FBO.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GBuffer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game.h">
@@ -108,6 +114,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Time.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="FBO.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GBuffer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -169,6 +181,18 @@
       <Filter>Resource Files</Filter>
     </None>
     <None Include="..\res\phongShader.frag">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\res\FBOShader.vert">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\res\FBOShader.frag">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\res\gBuffer.frag">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\res\gBuffer.vert">
       <Filter>Resource Files</Filter>
     </None>
   </ItemGroup>

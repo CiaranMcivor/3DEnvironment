@@ -24,47 +24,42 @@ void Game::init()
 {
 	/*Initialize window*/
 	gameWindow.init("3D Env");		
+	fbo.init(gameWindow.getWidth(), gameWindow.getHeight());
+	fbo.initShader();
+	fbo.generateQuad();
+
+	gBuffer.init(gameWindow.getWidth(), gameWindow.getHeight());
+	gBuffer.generateQuad();
+	gBuffer.initShader();
 
 	int gameObjNum = 3;
+	
 	/* Initialize each game object, set the object to be loaded, texture, collision position and radius*/
 	for (size_t i = 0; i < gameObjNum; i++)
 	{
 		renderData.push_back(ShaderData());
 	}
-	for (size_t i = 0; i < gameObjNum; i++)
+	for (size_t i = 0; i < 4; i++)
 	{
 		mesh.push_back(Mesh());
 	}
 
 	for (size_t i = 0; i < gameObjNum; i++)
 	{
-		gameObject.push_back(GameObject());
+		//gameObject.push_back(GameObject());
 	}
 	std::ifstream modelPaths("ModelPath.txt");
 	std::string path;
 
 	
 
-	for (int i = 0; i < 3; i++) {
+	for (int i = 0; i < 4; i++) {
 		std::getline(modelPaths, path);
 		mesh[i].loadModel(path);
 		//str.push_back('\n');
 		std::cout << path;
 	}
 
-
-
-
-	//mesh[0].loadModel("..\\res\\monkey3.obj");
-	//mesh[1].loadModel("..\\res\\cube.obj");
-	//mesh[2].loadModel("..\\res\\sphere.obj");
-	//renderData[0].gameObject.init(&mesh[0], "..\\res\\bricks.jpg", *renderData[0].gameObject.getTransform().GetPos(), 2.0f);
-	//renderData[0].gameObject.setPosition(glm::vec3{ 0,0,-15 });
-	//renderData[1].gameObject.init(&mesh[1], *renderData[1].gameObject.getTransform().GetPos(), 2.0f);
-	//renderData[1].gameObject.setPosition(glm::vec3{-10,0,-15});
-	//renderData[1].gameObject.setRotation(0);
-	//renderData[2].gameObject.init(&mesh[2], *renderData[2].gameObject.getTransform().GetPos(), 2.0f);
-	//renderData[2].gameObject.setPosition(glm::vec3{ 10,0,-15 });
 	gameObject[0].init(&mesh[0], "..\\res\\bricks.jpg", *gameObject[0].getTransform().GetPos(), 2.0f);
 	gameObject[0].setPosition(glm::vec3{ 0,0,-15 });
 	gameObject[1].init(&mesh[1], *gameObject[1].getTransform().GetPos(), 2.0f);
@@ -73,11 +68,14 @@ void Game::init()
 	gameObject[2].init(&mesh[2], *gameObject[2].getTransform().GetPos(), 2.0f);
 	gameObject[2].setPosition(glm::vec3{ 10,0,-15 });
 
-	for (int i = 0; i < gameObject.size(); i++) {
+
+	gameObject1.init(&mesh[3], *gameObject1.getTransform().GetPos(), 2.0f);
+	gameObject1.setPosition(glm::vec3{ 0,0,-15 });
+	for (int i = 0; i < 3; i++) {
 		renderData[i].gameObject = &gameObject[i];
 	}
 
-	camera.setViewtarget(&gameObject[0]);
+	camera.setViewtarget(&gameObject1);
 
 	/*load all required audio files*/
 	bang = audio.loadSound("..\\res\\bang.wav");
@@ -103,12 +101,12 @@ void Game::init()
 	/*Skybox Init*/
 	vector<std::string> faces
 	{
-		"..\\res\\skybox\\right.jpg",
-		"..\\res\\skybox\\left.jpg",
-		"..\\res\\skybox\\top.jpg",
-		"..\\res\\skybox\\bottom.jpg",
-		"..\\res\\skybox\\front.jpg",
-		"..\\res\\skybox\\back.jpg"
+		"..\\res\\skybox1\\right.png",
+		"..\\res\\skybox1\\left.png",
+		"..\\res\\skybox1\\top.png",
+		"..\\res\\skybox1\\bottom.png",
+		"..\\res\\skybox1\\front.png",
+		"..\\res\\skybox1\\back.png"
 	};
 
 	skybox.init(faces);
@@ -116,7 +114,7 @@ void Game::init()
 
 	/*Initialize the camera, taking position in world, fov,width,height and culling distances*/
 	camera.initCamera(glm::vec3(0, 0, -30), 70.0f, (float)gameWindow.getWidth() / gameWindow.getHeight(), 0.01f, 1000.0f);
-	
+
 	counter = 1.0f;
 }
 
@@ -210,6 +208,7 @@ void Game::update()
 	gameObject[0].setRotation(counter);
 	gameObject[1].setRotation(counter/2);
 	gameObject[1].update();
+	cameraPosition = camera.getPos();
 
 
 
@@ -264,44 +263,37 @@ void Game::runThirdShader()
 
 }
 
+
+
 void Game::draw()
 {
 	// Clear the widows colours.
 	gameWindow.clear(0.0f, 0.0f, 0.0f, 1.0f); //sets our background colour
 
-	for (int i = 0; i < 3; i++) 
-	{
-		renderData[i].shader.Bind();
-		linker.linkShader(&renderData[i].shader, renderData[i].gameObject, &camera, &counter, renderData[i].linkerType);
-		renderData[i].shader.Update(renderData[i].gameObject->getTransform(), camera);
-		renderData[i].gameObject->draw();
-	}
 
-	//geometryShader.Bind();
-	//linkGeometryShader();
-	//geometryShader.Update(gameObject.getTransform(), camera);
-	//gameObject.draw();
+	//fbo.bind();
+	//for (int i = 0; i < 3; i++) 
+	//{
+	//	renderData[i].shader.Bind();
+	//	linker.linkShader(&renderData[i].shader, renderData[i].gameObject, &camera, &counter, renderData[i].linkerType);
+	//	renderData[i].shader.Update(renderData[i].gameObject->getTransform(), camera);
+	//	renderData[i].gameObject->draw();
+	//}
 
-	//environmentMapping.Bind();
-	//linkEnvMapping(gameObject2.getTransform());
-	//environmentMapping.Update(gameObject2.getTransform(), camera);
-	//gameObject2.draw();
+	//renderData[1].shader.Bind();
+	//linker.linkShader(&renderData[1].shader, renderData[1].gameObject, &camera, &counter, renderData[1].linkerType);
+	//renderData[1].gameObject->draw();
+	//skybox.draw(&camera);
 
-	//thirdShader.Bind();
-	//linkPhongShader(gameObject3.getTransform());
-	//thirdShader.Update(gameObject3.getTransform(), camera);
-	//gameObject3.draw();
+	//fbo.unbind();
+	//fbo.render();
+
+	gBuffer.render(&gameObject1, &camera);
 
 
 
 	//Uncomment for raymarched sphere with phong shading, could only get the shader to run on a fullscreen plane and it will render over eveything.
 	//runThirdShader();
-
-	skybox.draw(&camera);
-
-
-	glEnableClientState(GL_COLOR_ARRAY);
-	glEnd();
 
 	gameWindow.swapBuffer();
 

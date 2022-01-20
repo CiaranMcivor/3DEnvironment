@@ -1,3 +1,4 @@
-..\\res\\monkey3.obj
-..\\res\\cube.obj
-..\\res\\sphere.obj
+..\\res\\Objects\\monkey3.obj
+..\\res\\Objects\\cube.obj
+..\\res\\Objects\\sphere.obj
+..\\res\\backpack\\backpack.obj

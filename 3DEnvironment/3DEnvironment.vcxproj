@@ -149,8 +149,10 @@
     <ClCompile Include="Audio.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Cube.cpp" />
+    <ClCompile Include="FBO.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameObject.cpp" />
+    <ClCompile Include="GBuffer.cpp" />
     <ClCompile Include="Linker.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Mesh.cpp" />
@@ -167,8 +169,10 @@
     <ClInclude Include="Audio.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Cube.h" />
+    <ClInclude Include="FBO.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameObject.h" />
+    <ClInclude Include="GBuffer.h" />
     <ClInclude Include="Linker.h" />
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="obj_loader.h" />
@@ -181,8 +185,12 @@
     <ClInclude Include="Window.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\res\FBOShader.frag" />
+    <None Include="..\res\FBOShader.vert" />
     <None Include="..\res\fogShader.frag" />
     <None Include="..\res\fogShader.vert" />
+    <None Include="..\res\gBuffer.frag" />
+    <None Include="..\res\gBuffer.vert" />
     <None Include="..\res\geometryShader.frag" />
     <None Include="..\res\geometryShader.geom" />
     <None Include="..\res\geometryShader.vert" />

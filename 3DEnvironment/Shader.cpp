@@ -21,6 +21,7 @@ void Shader::init(const std::string& vertFile , const std::string& fragFile)
 	glBindAttribLocation(shaderProgram, 1, "texCoord");
 	glBindAttribLocation(shaderProgram, 2, "normals");
 
+
 	glLinkProgram(shaderProgram); //create executables that will run on the GPU shaders
 	CheckShaderError(shaderProgram, GL_LINK_STATUS, true, "Error: Shader program linking failed"); // check for error
 
@@ -45,6 +46,7 @@ void Shader::init(const std::string& vertFile, const std::string& fragFile, cons
 	glBindAttribLocation(shaderProgram, 0, "position"); // associate attribute variable with  shader program attribute
 	glBindAttribLocation(shaderProgram, 1, "texCoord");
 	glBindAttribLocation(shaderProgram, 2, "normals");
+
 
 	glLinkProgram(shaderProgram); //create executables that will run on the GPU shaders
 	CheckShaderError(shaderProgram, GL_LINK_STATUS, true, "Error: Shader program linking failed"); // check for error

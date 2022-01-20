@@ -90,13 +90,13 @@ void Skybox::init(std::vector<std::string> faces)
 void Skybox::draw(Camera* camera)
 {
 	
+	glm::mat4 view = glm::mat4(glm::mat3(camera->getView())); // remove translation from the view matrix
 	glDepthFunc(GL_LEQUAL);
 	shader.Bind();
-	glm::mat4 view = glm::mat4(glm::mat3(camera->getView())); // remove translation from the view matrix
 	shader.setMat4("view", view);
 	shader.setMat4("projection", camera->getProjection());
 	glBindVertexArray(skyboxVAO);
-	glActiveTexture(GL_TEXTURE2);
+	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_CUBE_MAP, textureID);
 	glDrawArrays(GL_TRIANGLES, 0, 36);
 	glBindVertexArray(0);

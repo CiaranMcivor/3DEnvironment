@@ -48,6 +48,11 @@ public:
 		return glm::lookAt(pos, pos + forward, up);
 	}
 
+	void setPos(glm::vec3 modelPos)
+	{
+		pos = modelPos;
+	}
+
 	void MoveForward(float amt);
 
 

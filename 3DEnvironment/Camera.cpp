@@ -1,4 +1,6 @@
 #include "Camera.h"
+#include <glm/glm.hpp>
+#include <glm/gtx/transform.hpp>
 
 
 
@@ -39,6 +41,8 @@ void Camera::RotateY(float angle)
 	forward = glm::vec3(glm::normalize(rotation * glm::vec4(forward, 0.0)));
 	up = glm::vec3(glm::normalize(rotation * glm::vec4(up, 0.0)));
 }
+
+
 
 void Camera::update()
 {
