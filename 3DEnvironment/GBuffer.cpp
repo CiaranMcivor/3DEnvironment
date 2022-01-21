@@ -49,6 +49,12 @@ void GBuffer::loadTextures()
     diffuse.init("..\\res\\backpack\\diffuse.jpg");
     specular.init("..\\res\\backpack\\specular.jpg");
 
+    lightingPassShader.Bind();
+    // send light relevant uniforms
+    lightingPassShader.setInt("gPosition", 0);
+    lightingPassShader.setInt("gNormal", 1);
+    lightingPassShader.setInt("gDiffSpec", 2);
+
 }
 
 void GBuffer::initShader()
@@ -103,65 +109,56 @@ void GBuffer::generateQuad()
     glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(1);
     glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)(2 * sizeof(float)));
+
     
 }
 
 void GBuffer::geometryPass(GameObject* object, Camera* camera)
 {
     geometryPassShader.Bind();
-    diffuse.Bind(4);
-    geometryPassShader.setInt("diffuse", 4);
-    specular.Bind(3);
-    geometryPassShader.setInt("specular", 3);
-    geometryPassShader.setMat4("model", object->getTransform().GetModel());
     geometryPassShader.setMat4("view", camera->getView());
     geometryPassShader.setMat4("projection", camera->getProjection());
-    object->draw();
+    for (int i = 0; i < 3; i++) {
+        object[i].getDiffuse()->Bind(4);
+        geometryPassShader.setInt("diffuse", 4);
+        object[i].getSpecular()->Bind(3);
+        geometryPassShader.setInt("specular", 3);
+        geometryPassShader.setMat4("model", object[i].getTransform().GetModel());
 
+        object[i].draw();
+    }
 }
 
 void GBuffer::lightingPass(Camera* camera)
 {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    
+    lightingPassShader.Bind();
     glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, gPosition);
+    glBindTexture(GL_TEXTURE_2D, gNormal);
     glActiveTexture(GL_TEXTURE1);
     glBindTexture(GL_TEXTURE_2D, gNormal);
     glActiveTexture(GL_TEXTURE2);
     glBindTexture(GL_TEXTURE_2D, gDiffSpec);
 
 
-
-    lightingPassShader.Bind();
     // send light relevant uniforms
-    lightingPassShader.setInt("gPosition", 0);
-    lightingPassShader.setInt("gNormal", 1);
-    lightingPassShader.setInt("gDiffSpec", 2);
 
     lightingPassShader.setVec3("light.Position", glm::vec3(20, 20,-20));
     lightingPassShader.setVec3("light.Color", glm::vec3(255,255,255));
     // update attenuation parameters and calculate radius
-    const float linear = .0f;
-    const float quadratic = 1.8f;
+    const float linear = 0.7f;
+    const float quadratic = 0.9f;
     lightingPassShader.setFloat("light.Linear", linear);
     lightingPassShader.setFloat("light.Quadratic", quadratic);
 
     lightingPassShader.setVec3("viewPos", camera->getPos());
 }
 
-void GBuffer::render(GameObject* object, Camera* camera)
+void GBuffer::render()
 {
     //Geometry pass: load scene's geometry/color data into gbuffer
-    bind();
-    geometryPass(object,camera);
-    unbind();
-    lightingPass(camera);
-
-
-    generateQuad(); // Generate Quad to render to
     glBindVertexArray(quadVAO);
-    glBindTexture(GL_TEXTURE_2D, gBuffer);	// use the color attachment texture as the texture of the quad plane
     glDrawArrays(GL_TRIANGLES, 0, 6);
+
 
 }

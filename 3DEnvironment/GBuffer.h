@@ -35,7 +35,7 @@ public:
 	void generateQuad();
 	void geometryPass(GameObject* object, Camera* camera);
 	void lightingPass(Camera* camera);
-	void render(GameObject* object, Camera* camera);
+	void render();
 
 
 };

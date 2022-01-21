@@ -3,6 +3,7 @@
 #include "Transform.h"
 #include "Texture.h"
 #include "Mesh.h"
+#include <map>;
 using namespace std;
 
 
@@ -10,7 +11,7 @@ class GameObject
 {
 private:
 
-	Texture texture;
+	std::map<std::string,Texture> textures;
 	Mesh* mesh;
 	Transform transform;
 	glm::vec3 pos;
@@ -19,7 +20,8 @@ private:
 	glm::vec3 acceleration;
 	glm::vec3 maxSpeed = {10,10,10};
 
-
+	Texture diffuse;
+	Texture specular;
 
 
 public:
@@ -29,6 +31,9 @@ public:
 	glm::vec3 getPosition() { return *transform.GetPos(); }
 	glm::vec3 getVelocity() { return velocity; }
 	glm::vec3 getCollisionPos() { return mesh->getSpherePos(); }
+	Texture* getDiffuse() { return &diffuse; }
+	Texture* getSpecular() { return &specular; }
+
 	float getMass() { return mass; };
 	float getCollisionRadius() { return mesh->getSphereRadius(); }
 	void move();
@@ -36,7 +41,7 @@ public:
 	void setVelocity(glm::vec3 velocity);
 	void setRotation(float angle);
 	void init(Mesh* meshType, glm::vec3 collisionPos, float collisionRadius);
-	void init(Mesh* meshType, const std::string& texturePath, glm::vec3 collisionPos, float collisionRadius);
+	void init(Mesh* meshType, const std::string& diffusePath, const std::string& specularPath, glm::vec3 collisionPos, float collisionRadius);
 	void draw();
 	void draw(unsigned int texID);
 	void update();

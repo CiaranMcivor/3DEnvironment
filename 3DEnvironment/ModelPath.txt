@@ -2,3 +2,4 @@
 ..\\res\\Objects\\cube.obj
 ..\\res\\Objects\\sphere.obj
 ..\\res\\backpack\\backpack.obj
+..\\res\\Starfighter\\Ship.obj

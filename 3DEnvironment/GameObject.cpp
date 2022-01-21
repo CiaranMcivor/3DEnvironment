@@ -31,12 +31,13 @@ void GameObject::setRotation(float angle)
 }
 
 
-void GameObject::init(Mesh* meshType, const std::string &texturePath, glm::vec3 collisionPos, float collisionRadius)
+void GameObject::init(Mesh* meshType, const std::string &diffusePath, const std::string& specularPath, glm::vec3 collisionPos, float collisionRadius)
 {
 	/*Initialise collisions , model and texture for this object*/
 	mesh = meshType;
 	mesh->initCollisionData(collisionPos,collisionRadius);													//initialise the collision data for this object
-	texture.init(texturePath);
+	diffuse.init(diffusePath);
+	specular.init(specularPath);
 
 	//shader.init("..\\res\\shader"); //new shader
 	
@@ -52,9 +53,11 @@ void GameObject::init(Mesh* meshType, glm::vec3 collisionPos, float collisionRad
 
 }
 
+
+
+
 void GameObject::draw()
 {
-	texture.Bind(0);
 	mesh->draw();
 }
 

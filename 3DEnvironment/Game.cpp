@@ -24,9 +24,6 @@ void Game::init()
 {
 	/*Initialize window*/
 	gameWindow.init("3D Env");		
-	fbo.init(gameWindow.getWidth(), gameWindow.getHeight());
-	fbo.initShader();
-	fbo.generateQuad();
 
 	gBuffer.init(gameWindow.getWidth(), gameWindow.getHeight());
 	gBuffer.generateQuad();
@@ -39,7 +36,7 @@ void Game::init()
 	{
 		renderData.push_back(ShaderData());
 	}
-	for (size_t i = 0; i < 4; i++)
+	for (size_t i = 0; i < 5; i++)
 	{
 		mesh.push_back(Mesh());
 	}
@@ -53,23 +50,23 @@ void Game::init()
 
 	
 
-	for (int i = 0; i < 4; i++) {
+	for (int i = 0; i < 5; i++) {
 		std::getline(modelPaths, path);
 		mesh[i].loadModel(path);
 		//str.push_back('\n');
 		std::cout << path;
 	}
 
-	gameObject[0].init(&mesh[0], "..\\res\\bricks.jpg", *gameObject[0].getTransform().GetPos(), 2.0f);
+	gameObject[0].init(&mesh[3], "..\\res\\backpack\\diffuse.jpg", "..\\res\\backpack\\specular.jpg", *gameObject[0].getTransform().GetPos(), 2.0f);
 	gameObject[0].setPosition(glm::vec3{ 0,0,-15 });
-	gameObject[1].init(&mesh[1], *gameObject[1].getTransform().GetPos(), 2.0f);
+	gameObject[1].init(&mesh[0], "..\\res\\Objects\\hull.jpg", "..\\res\\backpack\\hull.jpg", *gameObject[1].getTransform().GetPos(), 2.0f);
 	gameObject[1].setPosition(glm::vec3{ -10,0,-15 });
 	gameObject[1].setRotation(0);
-	gameObject[2].init(&mesh[2], *gameObject[2].getTransform().GetPos(), 2.0f);
+	gameObject[2].init(&mesh[4], "..\\res\\Starfighter\\Starfighter.png", "..\\res\\Starfighter\\Starfighter.png", *gameObject[2].getTransform().GetPos(), 2.0f);
 	gameObject[2].setPosition(glm::vec3{ 10,0,-15 });
 
 
-	gameObject1.init(&mesh[3], *gameObject1.getTransform().GetPos(), 2.0f);
+	gameObject1.init(&mesh[3], "..\\res\\backpack\\diffuse.jpg", "..\\res\\backpack\\specular.jpg", *gameObject1.getTransform().GetPos(), 2.0f);
 	gameObject1.setPosition(glm::vec3{ 0,0,-15 });
 	for (int i = 0; i < 3; i++) {
 		renderData[i].gameObject = &gameObject[i];
@@ -81,7 +78,6 @@ void Game::init()
 	bang = audio.loadSound("..\\res\\bang.wav");
 	music = audio.loadSound("..\\res\\background.wav");
 	/*Shaders*/
-	//shader.init("..\\res\\shader"); 
 	raymarchShader.init("..\\res\\thirdShader.vert", "..\\res\\thirdShader.frag");
 	thirdShader.init("..\\res\\phongShader.vert", "..\\res\\phongShader.frag");
 
@@ -150,21 +146,20 @@ void Game::handleInput()
 				camera.setViewtarget(&gameObject[2]);
 				break;
 
-			//case SDLK_d:
-			//	gameObject.setVelocity(glm::vec3{ -0.1,0,0 });
-			//	break;
+			case SDLK_d:
+				gameObject[2].setVelocity(glm::vec3{ -0.1,0,0 });
+				break;
 
-			//case SDLK_SPACE:
-			//	gameObject.setVelocity(glm::vec3{ 0,0,-0.1 });
-			//	break;
+			case SDLK_a:
+				gameObject[2].setVelocity(glm::vec3{ 0.1,0,0 });
+				break;
 
-			//case SDLK_LSHIFT:
-			//	gameObject.setVelocity(glm::vec3{ 0,0,0.1 });
-			//	break;
-
-			//case SDLK_e:
-			//	gameObject.setVelocity(glm::vec3{ 0,0,0});
-			//	break;
+			case SDLK_w:
+				gameObject[2].setVelocity(glm::vec3{ 0,0.1,0 });
+				break;
+			case SDLK_s:
+				gameObject[2].setVelocity(glm::vec3{ 0,-0.1,0 });
+				break;
 			}
 
 			
@@ -201,13 +196,15 @@ void Game::update()
 	cout <<deltaTime << endl;
 	counter = (counter + 0.001f);
 	/*Check for collision between two objects using their collision spheres*/
-	//hasCollided(gameObject,gameObject2);
+	hasCollided(gameObject[0],gameObject[1]);
+	hasCollided(gameObject[1], gameObject[2]);
 	//hasCollided(gameObject2, gameObject3);
 	camera.update();
-	gameObject[0].update();
+	for (int i = 0; i < 3; i++) {
+		gameObject[i].update();
+	}
 	gameObject[0].setRotation(counter);
 	gameObject[1].setRotation(counter/2);
-	gameObject[1].update();
 	cameraPosition = camera.getPos();
 
 
@@ -222,8 +219,8 @@ bool Game::hasCollided(GameObject& object1, GameObject& object2)
 	{
 		audio.setlistener(camera.getPos(), object1.getPosition());
 		std::cout << "Collided" << std::endl;
-		//playAudio(bang, object1.getPosition());
-		object2.setVelocity(object1.getVelocity());
+		playAudio(bang, object1.getPosition());
+		//object2.setVelocity(object1.getVelocity());
 		object1.setVelocity(-object1.getVelocity());
 		return true;
 	}
@@ -240,7 +237,7 @@ void Game::gameLoop()
 		handleInput();
 		update();
 		draw();
-		//playAudio(music, glm::vec3(0.0f, 0.0f, 0.0f));
+		playAudio(music, glm::vec3(0.0f, 0.0f, 0.0f));
 	}
 }
 
@@ -268,8 +265,14 @@ void Game::runThirdShader()
 void Game::draw()
 {
 	// Clear the widows colours.
-	gameWindow.clear(0.0f, 0.0f, 0.0f, 1.0f); //sets our background colour
+	gameWindow.clear(0.0f, 0.0f, 0.0f, 0.0f); //sets our background colour
 
+	gBuffer.bind();
+	gBuffer.geometryPass(gameObject,&camera);
+	skybox.draw(&camera);
+	gBuffer.unbind();
+	gBuffer.lightingPass(&camera);
+	gBuffer.render();
 
 	//fbo.bind();
 	//for (int i = 0; i < 3; i++) 
@@ -283,12 +286,12 @@ void Game::draw()
 	//renderData[1].shader.Bind();
 	//linker.linkShader(&renderData[1].shader, renderData[1].gameObject, &camera, &counter, renderData[1].linkerType);
 	//renderData[1].gameObject->draw();
-	//skybox.draw(&camera);
+
 
 	//fbo.unbind();
 	//fbo.render();
 
-	gBuffer.render(&gameObject1, &camera);
+
 
 
 
