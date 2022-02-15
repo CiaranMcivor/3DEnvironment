@@ -197,17 +197,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Object Include="..\res\Zuccarello.obj">
-      <Filter>Resource Files</Filter>
-    </Object>
-    <Object Include="..\res\monkey3.obj">
-      <Filter>Resource Files</Filter>
-    </Object>
-    <Object Include="..\res\cube.obj">
-      <Filter>Resource Files</Filter>
-    </Object>
-  </ItemGroup>
-  <ItemGroup>
     <Image Include="..\res\bricks.jpg">
       <Filter>Resource Files</Filter>
     </Image>
