@@ -194,6 +194,8 @@
     <None Include="..\res\geometryShader.frag" />
     <None Include="..\res\geometryShader.geom" />
     <None Include="..\res\geometryShader.vert" />
+    <None Include="..\res\lightingPass.frag" />
+    <None Include="..\res\lightingPass.vert" />
     <None Include="..\res\phongShader.frag" />
     <None Include="..\res\phongShader.vert" />
     <None Include="..\res\rimShader.frag" />

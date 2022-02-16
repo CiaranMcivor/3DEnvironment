@@ -195,6 +195,12 @@
     <None Include="..\res\gBuffer.vert">
       <Filter>Resource Files</Filter>
     </None>
+    <None Include="..\res\lightingPass.vert">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\res\lightingPass.frag">
+      <Filter>Resource Files</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Image Include="..\res\bricks.jpg">

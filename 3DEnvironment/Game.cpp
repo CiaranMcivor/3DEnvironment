@@ -129,8 +129,8 @@ void Game::handleInput()
 
 		case SDL_MOUSEWHEEL:
 
-			camera.MoveForward(event.wheel.y * deltaTime);
-			
+			camera.MoveForward((event.wheel.y * 100) * deltaTime);
+
 			// Standard WASD controls from moving an object in the 4 cardinal directions W - Up,S - Down,A - Left, D - Right
 		case SDL_KEYDOWN:
 			switch (event.key.keysym.sym) {
@@ -160,9 +160,23 @@ void Game::handleInput()
 			case SDLK_s:
 				gameObject[2].setVelocity(glm::vec3{ 0,-0.1,0 });
 				break;
-			}
 
-			
+
+			case SDLK_RIGHT:
+				camera.MoveHorizontal(-10 * deltaTime);
+				break;
+
+			case SDLK_LEFT:
+				camera.MoveHorizontal(10*deltaTime);
+				break;
+
+			case SDLK_UP:
+				camera.MoveVertical(10*deltaTime);
+				break;
+			case SDLK_DOWN:
+				camera.MoveVertical(-10*deltaTime);
+				break;
+			}
 		}
 
 
@@ -237,7 +251,7 @@ void Game::gameLoop()
 		handleInput();
 		update();
 		draw();
-		playAudio(music, glm::vec3(0.0f, 0.0f, 0.0f));
+		//playAudio(music, glm::vec3(0.0f, 0.0f, 0.0f));
 	}
 }
 
